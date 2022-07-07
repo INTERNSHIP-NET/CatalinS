@@ -17,9 +17,9 @@ class Program
         var testsPath = Path.Combine(relativeDirectory, testsFolderName);
 
         DirectoryInfo testsFolder = new DirectoryInfo(testsPath);
-        FileInfo[] files = testsFolder.GetFiles("*.txt");
+        FileInfo[] testsFiles = testsFolder.GetFiles("*.txt");
 
-        foreach (FileInfo file in files)
+        foreach (FileInfo file in testsFiles)
         {
             Console.WriteLine("The status of the square in the " + file.Name + " file is:");
 

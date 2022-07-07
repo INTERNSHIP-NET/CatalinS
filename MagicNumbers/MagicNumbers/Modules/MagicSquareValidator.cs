@@ -15,7 +15,7 @@ namespace MagicNumbers.Modules
             {
                 CheckInputPath(filePath);
                 var magicNumber = GetMagicNumber(filePath);
-                Console.WriteLine("The square is a magical one. The magic value is " + magicNumber + ".");
+                Console.WriteLine("This square is a magical one. The magic value is " + magicNumber + ".");
 
                 return true;
             }
@@ -27,7 +27,7 @@ namespace MagicNumbers.Modules
             }
             catch (InvalidOperationException)
             {
-                Console.WriteLine("The square isn't a magical one.");
+                Console.WriteLine("This square isn't a magical one.");
 
                 return false;
             }
@@ -51,18 +51,24 @@ namespace MagicNumbers.Modules
         {
             var numberCollection = GetNumbersCollection(testPath);
 
+            var directionsValues = new HashSet<int>();
+
             var horizontalValue = GetHorizontalValue(numberCollection);
+            directionsValues.Add(horizontalValue);
+
             var verticalValue = GetVerticalValue(numberCollection);
+            directionsValues.Add(verticalValue);
 
-            if (horizontalValue == verticalValue)
+            var diagonalValue = GetDiagonalValue(numberCollection);
+            directionsValues.Add(verticalValue);
+
+            var maximNumberOfElements = 1;
+            if (directionsValues.Count > maximNumberOfElements)
             {
-                return horizontalValue;
-            }
-            else
-            {
-                throw new InvalidOperationException("The collection of numbers received is not a magic square, so its vertical value could not be extracted!");
+                throw new InvalidOperationException("The collection of numbers received is not a magic square, so its value could not be extracted!");
             }
 
+            return horizontalValue;
         }
 
         private List<List<int>> GetNumbersCollection(string path)
@@ -134,6 +140,31 @@ namespace MagicNumbers.Modules
             return columnValuesHashSet.First();
         }
 
-        //adauga functie pentru diagonala
+        private int GetDiagonalValue(List<List<int>> numbersCollection)
+        {
+            var diagonalValuesHashSet = new HashSet<int>();
+            var upLeftCrossedDiagonalValue = 0;
+            var downLeftCrossedDiagonalValue = 0;
+
+            var columnsNumbers = numbersCollection[0].Count;
+            var maxIndexOfSquare = numbersCollection[0].Count - 1;
+
+            for (var i = 0; i < columnsNumbers; i++)
+            {
+                upLeftCrossedDiagonalValue += numbersCollection[i][i];
+                downLeftCrossedDiagonalValue += numbersCollection[maxIndexOfSquare - i][i];
+            }
+
+            diagonalValuesHashSet.Add(upLeftCrossedDiagonalValue);
+            diagonalValuesHashSet.Add(downLeftCrossedDiagonalValue);
+
+            var maximNumberOfElements = 1;
+            if (diagonalValuesHashSet.Count > maximNumberOfElements)
+            {
+                throw new InvalidOperationException("The collection of numbers received is not a magic square, so its diagonal value could not be extracted!");
+            }
+
+            return diagonalValuesHashSet.First();
+        }
     }
 }
